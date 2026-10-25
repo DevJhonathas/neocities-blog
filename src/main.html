@@ -12,12 +12,13 @@
 
     <!-- Windows 98 Theme (include only one theme at a time) -->
     <link rel="stylesheet" href="https://unpkg.com/xp.css@0.2.3/dist/98.css" />
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.3.1/css/all.min.css" integrity="sha512-QeR2VH+lsBE5LSAe1Q5EnTBbe7XTBubt8dG93Y7gidSgdMCr8nVqKcfKAMyN96SV8KDbZVTDXChatu5G2KQGzg==" crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <script src="./main.js"></script>
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="/src/assets/titleSite.js"></script>
 
-    <script>
+    <!-- <script>
     let player;
     
     function onYouTubeIframeAPIReady() {
@@ -39,7 +40,7 @@
             }
         });
     }
-    </script>
+    </script> -->
   </head>
   <body>   
     <div class="container">
@@ -207,7 +208,7 @@
                         <div class="window">
                             <div class="title-bar">
                                 <div class="title-bar-text">
-                                    <marquee behavior="scroll" direction="left">Playing Music: Kyoko Kirigiri - Danganronpa Execution - Thick of it </marquee>
+                                    Music player
                                 </div>
                                 <div class="title-bar-controls">
                                     <button aria-label="Minimize"></button>
@@ -218,7 +219,29 @@
                         <div class="window-body">
                             <!-- <img class="dangaronpa" src="./img/backgrounds/dangaronpa.webp" alt="dangaronpa"> -->
                             <!-- <div id="youtube-player" style="position:absolute; opacity:0; pointer-events:none;"></div>   -->
+                            <div id="music-player">
+                                <div id="youtube-player"></div>
+                                <img id="song-image" src="/src/img/backgrounds/dangaronpa.webp">
+                                <!-- <div class="marquee-container">
+                                    <div class="marquee-content"> -->
+                                        <div id="song-name">Song</div>  
+                                    <!-- </div>
+                                </div> -->
+                                <div id="song-artist">Artist</div>
 
+                                <input type="range" name="" id="slider-song">
+
+                                <div id="music-buttons">
+                                <i id="shuffle-song" class="fa-solid fa-shuffle"></i>
+                                <i id="prev-song" class="fa-solid fa-backward-step"></i>
+                                <i id="playpause-song" class="fa-solid fa-circle-play fa-2x"></i>
+                                <i id="next-song" class="fa-solid fa-forward-step"></i>
+                                <i id="repeat-song" class="fa-solid fa-repeat"></i>
+                                </div>
+                            </div>
+
+
+                            <script src="music_player.js"></script>
                         </div>
                     </div>
                 </aside>

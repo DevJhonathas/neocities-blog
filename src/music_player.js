@@ -6,26 +6,41 @@ const playpauseButton = document.getElementById("playpause-song");
 const prevSongButton = document.getElementById("prev-song");
 const nextSongButton = document.getElementById("next-song");
 
-// Need to add fuctions for repeating and shuffling songs.
 const repeatSongButton = document.getElementById("repeat-song");
 const shuffleSongButton = document.getElementById("shuffle-song");
+
 const musicplayer = document.getElementById("music-player");
 
 const songs = [
   {
     audio: "cd5s0K9Il9Y",
+    name: "Nome da música",
+    artist: "Nome do artista",
+    image: "/src/img/backgrounds/dangaronpa.webp",
   },
   {
     audio: "kbNdx0yqbZE",
+    name: "Outra música",
+    artist: "Outro artista",
+    image: "/src/img/music/song-2.jpg",
   },
   {
     audio: "icBDYkfxpMs",
+    name: "Terceira música",
+    artist: "Outro artista",
+    image: "/src/img/music/song-3.jpg",
   },
   {
     audio: "19y8YTbvri8",
+    name: "Quarta música",
+    artist: "Artista",
+    image: "/src/img/music/song-4.jpg",
   },
   {
     audio: "3iUgKH8c7p4",
+    name: "Quinta música",
+    artist: "Artista",
+    image: "/src/img/music/song-5.jpg",
   },
 ];
 
@@ -44,7 +59,6 @@ function onYouTubeIframeAPIReady() {
   player = new YT.Player("youtube-player", {
     width: "0",
     height: "0",
-
     videoId: songs[currentSongIndex].audio,
 
     playerVars: {
@@ -59,62 +73,6 @@ function onYouTubeIframeAPIReady() {
     },
   });
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  const container = document.querySelector(".marquee-container");
-  const content = document.querySelector(".marquee-content");
-  let isPaused = false;
-  let startTime = null;
-  const speed = 100; // Pixels per second
-  let containerWidth = container.offsetWidth;
-  let contentWidth = content.offsetWidth;
-
-  function animateMarquee(timestamp) {
-    if (!startTime) startTime = timestamp;
-    const elapsedTime = (timestamp - startTime) / 2000;
-
-    if (!isPaused) {
-      const distance = speed * elapsedTime;
-      const position = -distance % (contentWidth + containerWidth);
-      content.style.transform = `translateX(${position}px)`;
-    }
-
-    requestAnimationFrame(animateMarquee);
-  }
-
-  // Start animation
-  requestAnimationFrame(animateMarquee);
-  // Handle resize
-  window.addEventListener("resize", () => {
-    containerWidth = container.offsetWidth;
-    contentWidth = content.offsetWidth;
-  });
-
-  container.addEventListener("mouseenter", () => {
-    isPaused = true;
-  });
-
-  // Resume on mouse leave
-  container.addEventListener("mouseleave", () => {
-    isPaused = false;
-  });
-});
-
-// animate(musicplayer);
-
-// function animate(element) {
-//   let elementWidth = element.offsetWidth;
-//   let parentWidth = element.parentElement.offsetWidth;
-//   let flag = 0;
-
-//   setInterval(() => {
-//     element.style.marginLeft = --flag + "px";
-
-//     if (elementWidth == -flag) {
-//       flag = parentWidth;
-//     }
-//   }, 10);
-// }
 
 songSlider.addEventListener("pointerdown", function () {
   isSeeking = true;
@@ -156,6 +114,9 @@ function onPlayerStateChange(event) {
     if (currentSongIndex < songs.length - 1) {
       currentSongIndex++;
       updateSong();
+    } else {
+      currentSongIndex = 0;
+      updateSong();
     }
   }
 }
@@ -164,11 +125,13 @@ prevSongButton.addEventListener("click", function () {
   if (!playerReady) {
     return;
   }
+
   currentSongIndex--;
 
   if (currentSongIndex < 0) {
     currentSongIndex = songs.length - 1;
   }
+
   updateSong();
 });
 
@@ -182,6 +145,7 @@ nextSongButton.addEventListener("click", function () {
   if (currentSongIndex >= songs.length) {
     currentSongIndex = 0;
   }
+
   updateSong();
 });
 
@@ -199,52 +163,17 @@ playpauseButton.addEventListener("click", function () {
   }
 });
 
-async function getYouTubeInfo(videoId) {
-  const youtubeUrl = `https://www.youtube.com/watch?v=${videoId}`;
-
-  const oembedUrl = `https://www.youtube.com/oembed?url=${encodeURIComponent(youtubeUrl)}&format=json`;
-
-  const response = await fetch(oembedUrl);
-
-  if (!response.ok) {
-    throw new Error("Não foi possível obter informações do YouTube.");
-  }
-
-  const data = await response.json();
-
-  return {
-    name: data.title,
-    artist: data.author_name,
-    image: data.thumbnail_url,
-    channelUrl: data.author_url,
-  };
-}
-async function updateSong() {
+function updateSong() {
   const song = songs[currentSongIndex];
 
   songSlider.value = 0;
 
-  try {
-    const info = await getYouTubeInfo(song.audio);
+  songImage.src = song.image;
+  songName.innerText = song.name;
+  songArtist.innerText = song.artist;
 
-    songImage.src = info.image;
-
-    songName.innerText = info.name;
-
-    songArtist.innerText = info.artist;
-
-    if (playerReady) {
-      player.loadVideoById(song.audio);
-    }
-  } catch (error) {
-    console.error("Erro ao buscar informações do YouTube:", error);
-
-    songName.innerText = "Unknown song";
-    songArtist.innerText = "Unknown artist";
-
-    if (playerReady) {
-      player.loadVideoById(song.audio);
-    }
+  if (playerReady) {
+    player.loadVideoById(song.audio);
   }
 }
 
@@ -257,7 +186,6 @@ function moveSlider() {
 
   if (duration > 0) {
     songSlider.max = duration;
-
     songSlider.value = player.getCurrentTime();
   }
 }
